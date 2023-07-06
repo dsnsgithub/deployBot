@@ -1,6 +1,6 @@
 # DeployBot
 
-A deployment solution for dsns.dev using discord.js,
+A deployment solution for dsns.dev using discord.js.
 
 This bot will execute a Python script when run with /deploy, then display the output in Discord.
 
