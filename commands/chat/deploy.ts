@@ -16,7 +16,7 @@ module.exports = {
 		});
 
 		script.stdout.on("data", async (data: Buffer) => {
-			if (output.length + data.toString().length < 1980) {
+			if (output.length + data.toString().length < 1960) {
 				output += data.toString();
 			} else {
 				let combinedOutput = output + data.toString();
@@ -27,8 +27,7 @@ module.exports = {
 					combinedOutput = combinedOutputArray.join("\n");
 				}
 
-
-				output = "```ansi\n[... continued]\n" + combinedOutput;
+				output = "```ansi\n[...continued]\n" + combinedOutput;
 			}
 
 			await interaction.editReply({ content: output + "```" });
