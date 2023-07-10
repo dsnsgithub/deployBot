@@ -9,4 +9,5 @@ json/
 !json/games.json
 
 deploy.sh
+deploy.bat
 .dev.vars
