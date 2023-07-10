@@ -15,8 +15,7 @@ module.exports = {
 			detached: true
 		});
 
-		let message: Message;
-		let createdMessage = false;
+		let messageID: string;
 		script.stdout.on("data", async (data: Buffer) => {
 			try {
 				if (output.length + data.toString().length < 1987) {
@@ -24,14 +23,14 @@ module.exports = {
 				} else {
 					output = "```ansi\n";
 					output += data.toString();
-					createdMessage = false;
+					messageID = "";
 				}
 
-				if (!createdMessage) {
-					message = await interaction.followUp({ content: output + "```", ephemeral: true });
-					createdMessage = true;
+				if (!messageID) {
+					let message = await interaction.followUp({ content: output + "```", ephemeral: true });
+					messageID = message.id;
 				} else {
-					message.edit({ content: output + "```" });
+					await interaction.channel?.messages.edit(messageID, { content: output + "```" });
 				}
 
 			} catch (error) {
