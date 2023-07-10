@@ -16,21 +16,28 @@ module.exports = {
 		});
 
 		script.stdout.on("data", async (data: Buffer) => {
-			if (output.length + data.toString().length < 1960) {
-				output += data.toString();
-			} else {
-				let combinedOutput = output + data.toString();
-				let combinedOutputArray = combinedOutput.split("\n");
+			try {
+				if (output.length + data.toString().length < 1960) {
+					output += data.toString();
+				} else {
+					let combinedOutput = output + data.toString();
+					let combinedOutputArray = combinedOutput.split("\n");
 
-				while (combinedOutput.length > 1960) {
-					combinedOutputArray.shift();
-					combinedOutput = combinedOutputArray.join("\n");
+					while (combinedOutput.length > 1960) {
+						combinedOutputArray.shift();
+						combinedOutput = combinedOutputArray.join("\n");
+					}
+
+					output = "```ansi\n[...continued]\n" + combinedOutput;
 				}
 
-				output = "```ansi\n[...continued]\n" + combinedOutput;
-			}
+				await interaction.editReply({ content: output + "```" });
+			} catch (error) {
+				console.error(error);
 
-			await interaction.editReply({ content: output + "```" });
+				output = "```ansi\nError while running command, attempting to recover.";
+				await interaction.editReply({ content: output + "```" });
+			}
 		});
 	}
 };
