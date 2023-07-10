@@ -8,7 +8,7 @@ import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 const client: ClientWithCommands = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 interface ClientWithCommands extends Client {
-	commands?: Collection<any, any>
+	commands?: Collection<any, any>;
 }
 
 client.commands = new Collection();
