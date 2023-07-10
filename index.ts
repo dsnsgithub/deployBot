@@ -1,10 +1,15 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const fs = require("node:fs");
-const path = require("node:path");
+import fs from "fs";
+import path from "path";
 
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+const client: ClientWithCommands = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+interface ClientWithCommands extends Client {
+	commands?: Collection<any, any>
+}
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, "commands");
@@ -12,7 +17,7 @@ const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
 	const commandsPath = path.join(foldersPath, folder);
-	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".ts"));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
 		const command = require(filePath);
@@ -27,8 +32,9 @@ for (const folder of commandFolders) {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
+	if (!client.commands) return;
 
-	const command = interaction.client.commands.get(interaction.commandName);
+	const command = client.commands.get(interaction.commandName);
 
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);

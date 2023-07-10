@@ -24,8 +24,8 @@ This bot will execute a Python script when run with /deploy, then display the ou
 
 ### 4. Register Discord Slash Commands:
 
-    node deploy-commands.js
+    ts-node -T deploy-commands.ts
 
 ### 5. Run the Discord Bot:
 
-    node .
+    ts-node -T .
