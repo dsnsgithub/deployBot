@@ -15,28 +15,15 @@ module.exports = {
 			detached: true
 		});
 
-		let messageID: string;
 		script.stdout.on("data", async (data: Buffer) => {
-			try {
-				if (output.length + data.toString().length < 1987) {
-					output += data.toString();
-				} else {
-					output = "```ansi\n";
-					output += data.toString();
-					messageID = "";
-				}
-
-				if (!messageID) {
-					let message = await interaction.followUp({ content: output + "```", ephemeral: true });
-					messageID = message.id;
-				} else {
-					await interaction.channel?.messages.edit(messageID, { content: output + "```" });
-				}
-
-			} catch (error) {
-				output = "```ansi\nSomething went wrong, attempting to reset.\nError: " + error;
-				await interaction.followUp({ content: output + "```", ephemeral: true });
+			if (output.length + data.toString().length < 1987) {
+				output += data.toString();
+			} else {
+				output = "```ansi\n[... continued]";
+				output += data.toString();
 			}
+
+			await interaction.editReply({ content: output + "```" });
 		});
 	}
 };
