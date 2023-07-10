@@ -16,11 +16,19 @@ module.exports = {
 		});
 
 		script.stdout.on("data", async (data: Buffer) => {
-			if (output.length + data.toString().length < 1987) {
+			if (output.length + data.toString().length < 1980) {
 				output += data.toString();
 			} else {
-				output = "```ansi\n[... continued]";
-				output += data.toString();
+				let combinedOutput = output + data.toString();
+				let combinedOutputArray = combinedOutput.split("\n");
+
+				while (combinedOutput.length > 1960) {
+					combinedOutputArray.shift();
+					combinedOutput = combinedOutputArray.join("\n");
+				}
+
+
+				output = "```ansi\n[... continued]\n" + combinedOutput;
 			}
 
 			await interaction.editReply({ content: output + "```" });
